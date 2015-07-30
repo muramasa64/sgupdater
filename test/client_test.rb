@@ -43,6 +43,7 @@ class TestClient < Test::Unit::TestCase
       assert_equal(@@config['vpc_id'], sg.vpc_id)
 
       fx = @@fixture['security_groups'].find {|f| f['group_name'] == sg.group_name}
+      next if fx
       assert_equal(fx['group_name'], sg.group_name)
       assert_equal(fx['description'], sg.description)
 
