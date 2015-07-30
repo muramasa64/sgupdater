@@ -41,6 +41,10 @@ module Sgupdater
        cidr1_find && cidr2_not_find
     end
 
+    def ip_ranges_to_ips(ip_ranges)
+      ip_ranges.map {|ip_range| ip_range.values}.flatten
+    end
+
     def show_security_groups(sg, from_cidr, to_cidr)
       sg.ip_permissions.each do |perm|
         found = false
@@ -49,7 +53,7 @@ module Sgupdater
         else
           found = cidr_in_ip_permission?(perm, from_cidr)
         end
-        puts [sg.vpc_id || '(classic)', sg.group_id, sg.group_name, perm.from_port, perm.to_port, from_cidr].join("\t") if found
+        puts [sg.vpc_id || '(classic)', sg.group_id, sg.group_name, perm.from_port, perm.to_port, ip_ranges_to_ips(perm.ip_ranges).join(",")].join("\t") if found
       end
     end
   end
