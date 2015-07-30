@@ -10,6 +10,7 @@ module Sgupdater
     desc :show, "Show current permissions"
     method_option :from_cidr, type: :string, required: true
     method_option :to_cidr, type: :string, required: false
+    method_option :show_account, type: :boolean, required: false, default: false
     def show
       client.get.each {|sg| show_security_groups(sg, options[:from_cidr], options[:to_cidr])}
     end
@@ -53,7 +54,11 @@ module Sgupdater
         else
           found = cidr_in_ip_permission?(perm, from_cidr)
         end
-        puts [sg.vpc_id || '(classic)', sg.group_id, sg.group_name, perm.from_port, perm.to_port, ip_ranges_to_ips(perm.ip_ranges).join(",")].join("\t") if found
+
+        if found
+          print "#{sg.owner_id}\t" if options[:show_account]
+          puts [sg.vpc_id || '(classic)', sg.group_id, sg.group_name, perm.from_port, perm.to_port, ip_ranges_to_ips(perm.ip_ranges).join(",")].join("\t")
+        end
       end
     end
   end
