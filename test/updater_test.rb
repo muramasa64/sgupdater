@@ -59,8 +59,8 @@ class TestUpdater < Test::Unit::TestCase
     assert(@updater.update)
     @client.get(@cli_options[:to_cidr]).each do |sg|
       assert_equal(@@config['vpc_id'], sg.vpc_id)
-
       fx = @@fixture['security_groups'].find {|f| f['group_name'] == sg.group_name}
+      next unless fx
       assert_equal(fx['group_name'], sg.group_name)
       assert_equal(fx['description'], sg.description)
 
