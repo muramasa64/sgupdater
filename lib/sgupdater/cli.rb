@@ -57,7 +57,7 @@ module Sgupdater
 
         if found
           print "#{sg.owner_id}\t" if options[:show_account]
-          puts [sg.vpc_id || '(classic)', sg.group_id, sg.group_name, perm.from_port, perm.to_port, ip_ranges_to_ips(perm.ip_ranges).join(",")].join("\t")
+          puts [aws_configuration[:region], sg.vpc_id || '(classic)', sg.group_id, sg.group_name, perm.from_port, perm.to_port, ip_ranges_to_ips(perm.ip_ranges).join(",")].join("\t")
         end
       end
     end
