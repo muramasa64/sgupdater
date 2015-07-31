@@ -76,6 +76,23 @@ class TestUpdater < Test::Unit::TestCase
       end
     end
   end
+
+  def test_add
+    added = @updater.add(@cli_options[:from_cidr], @cli_options[:to_cidr])
+    added.each do |vpc, sgs|
+      sgs.each do |sg_id, sg|
+        fx = @@fixture['security_groups'].find {|f| f['group_name'] == sg[:name]}
+        next unless fx
+        assert_equal(fx['group_name'], sg[:name])
+        assert_equal(fx['description'], sg[:description])
+
+        sg[:ingress].each do |perm|
+          assert(perm[:ip_ranges].include?(@cli_options[:to_cidr]))
+          assert(perm[:ip_ranges].include?(@cli_options[:from_cidr]))
+        end
+      end
+    end
+  end
 end
 
 
