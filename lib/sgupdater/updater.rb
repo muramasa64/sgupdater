@@ -29,6 +29,21 @@ module Sgupdater
       end
     end
 
+    def add(from, to)
+      @exported.each do |vpc, sgs|
+        sgs.each do |sg, props|
+          props[:ingress].each do |ing|
+            ing[:ip_ranges].each do |cidr|
+              if cidr == from
+                ing[:ip_ranges] << to
+                puts [vpc ? vpc : '(classic)', sg, props[:name], ing[:protocol], ing[:port_range], ing[:ip_ranges], ing[:groups]].join("\t")
+              end
+            end
+          end
+        end
+      end
+    end
+
     def update
       exported = JSON.pretty_generate(@exported)
       file = Tempfile.new('exported')

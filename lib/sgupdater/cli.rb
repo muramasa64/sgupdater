@@ -27,6 +27,18 @@ module Sgupdater
       end
     end
 
+    desc :add, "Add to_cidr address same from_cidr setting"
+    method_option :from_cidr, type: :string, required: true
+    method_option :to_cidr, type: :string, required: true
+    def add
+      added = client.add
+      if added
+        puts "Add success"
+      else
+        puts "No change"
+      end
+    end
+
     private
     def client
       @client ||= Client.new options, aws_configuration

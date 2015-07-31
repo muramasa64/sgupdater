@@ -24,6 +24,12 @@ module Sgupdater
       updater.update
     end
 
+    def add
+      updater = Sgupdater::Updater.new(@cli_options)
+      updater.add(@cli_options[:from_cidr], @cli_options[:to_cidr])
+      updater.update
+    end
+
     def security_groups_with_cidr(cidr)
       @ec2.security_groups(
         filters: [
